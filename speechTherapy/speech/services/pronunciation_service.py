@@ -4,31 +4,26 @@ import difflib
 
 class PronunciationService:
     @staticmethod
-    def normalize(text):
-        # Strip punctuation, extra whitespace, normalize to single spaces
-        text = re.sub(r"[।.,!?;:\"'()]", "", text)
-        text = re.sub(r"\s+", " ", text).strip()
-        return text
+    def normalize_word(w):
+        return re.sub(r"[।.,!?;:\"'()]", "", w).strip()
 
     @staticmethod
     def compare(expected_text, recognized_text):
-        expected_words = PronunciationService.normalize(expected_text).split()
-        recognized_words = PronunciationService.normalize(recognized_text).split()
+        expected_words = [PronunciationService.normalize_word(w) for w in expected_text.split()]
+        recognized_words = [PronunciationService.normalize_word(w) for w in recognized_text.split()]
 
         matcher = difflib.SequenceMatcher(None, expected_words, recognized_words)
+        word_details = []  # full per-word list, in expected-sentence order
         correct = 0
-        incorrect_details = []
 
         for tag, i1, i2, j1, j2 in matcher.get_opcodes():
             if tag == "equal":
+                for w in expected_words[i1:i2]:
+                    word_details.append({"word": w, "correct": True})
                 correct += (i2 - i1)
             else:
-                expected_chunk = expected_words[i1:i2]
-                recognized_chunk = recognized_words[j1:j2]
-                incorrect_details.append({
-                    "expected": " ".join(expected_chunk) if expected_chunk else None,
-                    "recognized": " ".join(recognized_chunk) if recognized_chunk else None,
-                })
+                for w in expected_words[i1:i2]:
+                    word_details.append({"word": w, "correct": False})
 
         total = len(expected_words)
         incorrect = total - correct
@@ -37,5 +32,5 @@ class PronunciationService:
             "total_words": total,
             "correct_words": correct,
             "incorrect_words": incorrect,
-            "details": incorrect_details,
+            "word_details": word_details,
         }
