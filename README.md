@@ -20,7 +20,7 @@ The application features a responsive user interface built to consume the backen
 
 ---
 
-## Verified Core Features
+## Core Features
 
 - 🎙️ **Malayalam Speech Recognition (ASR)**
   Powered by OpenAI's Whisper model (`small` model explicitly targeted at Malayalam `language="ml"`) to transcribe spoken Malayalam audio.
@@ -67,7 +67,7 @@ The application features a responsive user interface built to consume the backen
 
 ---
 
-## Verified Project Directory Structure
+## Project Directory Structure
 
 ```
 speech_Therapy/
@@ -183,7 +183,7 @@ flowchart TD
         K[(SQLite / Database)]
     end
 
-    %% Verified Execution Path
+    %% Execution Path
     A -->|1. POST /api/pronunciation/ audio + exercise_id| B
     B --> C
     C --> D
@@ -208,7 +208,7 @@ flowchart TD
 
 ---
 
-## Verified Database Schema & Data Models
+## Database Schema & Data Models
 
 The system relies on 5 active data models inside `speech/models.py` along with Django's standard `User` model:
 
